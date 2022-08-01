@@ -1,12 +1,13 @@
 const playerFact = (name, mark) => {
     return {name, mark};
 }
-let players = [playerFact('John', 'X'), playerFact('James', 'O')];
 
 const Game = (() => {
     let pFlag = 0;
     let winFlag = 0;
     let count = 0;
+    let firstFlag = 0;
+    let players = [];
 
     const setFlag = (tie) => {
         if(!tie && winFlag === 0) {
@@ -30,7 +31,7 @@ const Game = (() => {
         } else {return true;}
     }
 
-    const changePlayer = (players) => {
+    const changePlayer = () => {
         if(pFlag === 0) {
             pFlag = 1;
             count += 1;
@@ -44,6 +45,12 @@ const Game = (() => {
     }
 
     const startGame = () => {
+        if (firstFlag===0) {
+            players.push(playerFact(prompt("Please enter Player 1's Name: "), "X"));
+            players.push(playerFact(prompt("Please enter Player 2's Name: "), "O"));
+            firstFlag = 1;
+        }
+        
         Gameboard.clearBoard();
         Gameboard.initRows();
         displayController.init();
@@ -53,7 +60,7 @@ const Game = (() => {
         count = 0;
     }
 
-    return {checkCount, getFlag, setFlag, changePlayer, startGame};
+    return {checkCount, getFlag, setFlag, changePlayer, startGame, players};
 })();
 
 const Gameboard = (() => {
@@ -74,7 +81,7 @@ const Gameboard = (() => {
     const clickBoard = (row, cell) => {
         if(!Game.getFlag()) {
             if (board[row][cell] != "X" && board[row][cell] != "O"){
-            mark = Game.changePlayer(players);
+            mark = Game.changePlayer();
             changeBoard(mark, row, cell);
             if(checkWin(mark, row, cell)) {
                 Game.setFlag(false);
@@ -120,8 +127,10 @@ const Gameboard = (() => {
 const displayController = (() => {
     const winDisplay = document.querySelector(".winner");
     const replay = document.querySelector(".replay");
+    const players = document.querySelector(".players");
 
     const init = () => {
+        players.textContent = `${Game.players[0].name}: 'O' ${Game.players[1].name}: 'X'`
         replay.addEventListener("click", Game.startGame);
         replay.style.cssText = "display:none;"
     }
@@ -147,6 +156,3 @@ const displayController = (() => {
 })();
 
 Game.startGame();
-
-
-// add something to allow players to enter names.
