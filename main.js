@@ -1,3 +1,16 @@
+////// OPTIONAL: add game ai 
+
+
+
+
+
+
+
+
+
+
+
+
 const playerFact = (name, mark) => {
     return {name, mark};
 }
